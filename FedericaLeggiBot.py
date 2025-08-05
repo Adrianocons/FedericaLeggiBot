@@ -29,7 +29,7 @@ if not FEDE_USERNAME:
     raise RuntimeError("La variabile d'ambiente FEDE_USERNAME non è impostata")
 
 KEYWORDS = [
-    r"\bFede\b",
+    r"\bFede",
     r"\bFederica\b",
     r"porco\s*dio",
     r"dio\s*cane",
@@ -78,4 +78,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
