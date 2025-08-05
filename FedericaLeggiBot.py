@@ -28,7 +28,17 @@ if not BOT_TOKEN:
 if not FEDE_USERNAME:
     raise RuntimeError("La variabile d'ambiente FEDE_USERNAME non è impostata")
 
-PATTERN = re.compile(r"\b(?:Fede|Federica)\b", flags=re.IGNORECASE)
+KEYWORDS = [
+    r"\bFede\b",
+    r"\bFederica\b",
+    r"porco\s*dio",
+    r"dio\s*cane",
+    r"\bMussolini\b",
+    r"\dux\b",
+]
+
+PATTERN = re.compile("|".join(KEYWORDS), flags=re.IGNORECASE)
+
 
 FEDE_USERNAME_CLEAN = FEDE_USERNAME.lstrip("@").lower()
 
@@ -68,3 +78,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
