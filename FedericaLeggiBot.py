@@ -20,6 +20,7 @@ logging.basicConfig(
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 FEDE_USER_ID = os.environ.get("FEDE_USER_ID") 
+FEDE_USERNAME = "@FedericaPutti"  
 
 if not BOT_TOKEN:
     raise RuntimeError("La variabile d’ambiente BOT_TOKEN non è impostata")
@@ -30,10 +31,12 @@ if not FEDE_USER_ID:
 PATTERN = re.compile(r"\b(?:Fede|Federica)\b", flags=re.IGNORECASE)
 
 
+
+
 async def alert_fede(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
-    text = f"<a href='tg://user?id={FEDE_USER_ID}'>Federica</a> leggi "
-    await context.bot.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.HTML)
+    text = f"Leggi {FEDE_USERNAME}"
+    await context.bot.send_message(chat_id=chat_id, text=text)
 
 
 def main() -> None:
@@ -45,4 +48,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
