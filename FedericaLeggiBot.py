@@ -2,6 +2,7 @@ import logging
 import os
 import re
 import json
+from datetime import datetime, timezone
 
 from telegram import Update
 from telegram.ext import (
@@ -50,6 +51,8 @@ def save_commands():
     with open(COMMANDS_FILE, "w", encoding="utf-8") as f:
         json.dump(CUSTOM_COMMANDS, f, ensure_ascii=False, indent=2)
 
+START_TIME = datetime.now(timezone.utc)
+
 async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.username and update.effective_user.username.lower() == FEDE_USERNAME_CLEAN:
         return
@@ -65,6 +68,8 @@ async def stop_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.username and update.effective_user.username.lower() == FEDE_USERNAME_CLEAN:
         return
+    if update.message.date < START_TIME:
+        return
     try:
         text = update.message.text.replace("/addcomando", "", 1).strip()
         name, response = map(str.strip, text.split(",", 1))
@@ -78,6 +83,8 @@ async def add_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def remove_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.username and update.effective_user.username.lower() == FEDE_USERNAME_CLEAN:
+        return
+    if update.message.date < START_TIME:
         return
     try:
         name = update.message.text.replace("/removecomando", "", 1).strip()
@@ -93,6 +100,8 @@ async def remove_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Errore. Usa: /removecomando nomecomando")
 
 async def alert_fede(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.date < START_TIME:
+        return
     if not context.chat_data.get("enabled", True):
         return
     chat_id = update.effective_chat.id
@@ -100,6 +109,8 @@ async def alert_fede(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=chat_id, text=text)
 
 async def handle_custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.date < START_TIME:
+        return
     message = update.message.text.strip()
     command = message.split()[0].lower()
     if command in CUSTOM_COMMANDS:
